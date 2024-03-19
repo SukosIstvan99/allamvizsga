@@ -1,3 +1,4 @@
+import 'package:allamvizsga/network/apiclient.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/about_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/send_feedback.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/update_email.dart';
@@ -78,30 +79,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
-        // Feltöltjük a képet a szerverre
-        var request = http.MultipartRequest(
-          'POST',
-          Uri.parse('http://192.168.1.105/user_api/upload_profile_picture.php'),
-        );
-        request.files.add(
-          await http.MultipartFile.fromPath('profilePicture', pickedFile!.path),
-        );
-        request.fields['userId'] = widget.userId;
-
-
-        var response = await request.send();
+        ApiClient apiClient = ApiClient(client: http.Client());
+        final response = await apiClient.uploadCameraPhoto(uid: widget.userId, files: [pickedFile.path]);
 
         // Várjuk meg a választ
-        if (response.statusCode == 200) {
-          // Sikeres feltöltés esetén a válasz tartalmazza a kép URL-jét
-          String imageUrl = await response.stream.bytesToString();
-          // Frissítjük a profilképet az új URL-re
+        if (response.success == true ) {
+
+          String imageUrl = response.image;
+
           setState(() {
             _profilePictureUrl = imageUrl;
           });
         } else {
           // Ha nem sikerült a feltöltés, kiírjuk a hibát
-          print('Hiba történt a kép feltöltésekor: ${response.reasonPhrase}');
+          print('Hiba történt a kép feltöltésekor:');
         }
       }
     } catch (e) {

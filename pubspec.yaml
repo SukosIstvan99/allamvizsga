@@ -44,6 +44,7 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   animated_theme_switcher: ^2.0.10
   flutter_screenutil: ^5.9.0
+  json_serializable: ^6.7.1
   dot_navigation_bar:
 
 
@@ -65,6 +66,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
