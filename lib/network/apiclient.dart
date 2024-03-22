@@ -61,6 +61,8 @@ class ApiClient {
     return files;
   }
 
+
+
   /*
 
   Future<SplashResponse> callSplash({required String udid}) async {
@@ -73,6 +75,7 @@ class ApiClient {
   }
 
    */
+
 
   Future<UploadImgResponse> uploadCameraPhoto({required String uid, required List<String> files}) async {
     return UploadImgResponse.fromJson(await _postMultipart(

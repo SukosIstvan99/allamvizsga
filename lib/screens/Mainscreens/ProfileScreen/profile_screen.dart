@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String _email;
   late String _profilePictureUrl;
   bool _isLoading = true;
-  bool _isDarkModeEnabled = false;
+
 
   Future<void> getProfileData() async {
     String uri = "http://192.168.1.105/user_api/profile.php?user_id=${widget.userId}";
@@ -82,17 +82,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ApiClient apiClient = ApiClient(client: http.Client());
         final response = await apiClient.uploadCameraPhoto(uid: widget.userId, files: [pickedFile.path]);
 
-        // Várjuk meg a választ
-        if (response.success == true ) {
-
+        if (response.success == true) {
+          // Kép sikeresen feltöltve, kezeljük az új képet
           String imageUrl = response.image;
-
           setState(() {
             _profilePictureUrl = imageUrl;
           });
-        } else {
-          // Ha nem sikerült a feltöltés, kiírjuk a hibát
-          print('Hiba történt a kép feltöltésekor:');
+        }else {
+          print('Hiba történt a kép feltöltésekor: ${response.message}');
         }
       }
     } catch (e) {
@@ -141,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       CircleAvatar(
                         radius: 100,
                         backgroundImage: _profilePictureUrl.isNotEmpty
-                            ? NetworkImage(_profilePictureUrl) as ImageProvider<Object>
+                            ? NetworkImage(_profilePictureUrl)
                             : AssetImage('assets/profile.png') as ImageProvider<Object>,
                       ),
                       GestureDetector(

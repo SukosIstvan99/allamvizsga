@@ -1,5 +1,8 @@
+import 'package:allamvizsga/screens/BusTT/bus_screen.dart';
+import 'package:allamvizsga/screens/Culture/culture_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/profile_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ReportScreen/report_screen.dart';
+import 'package:allamvizsga/screens/News/news_screen.dart';
 import 'package:allamvizsga/screens/test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:allamvizsga/screens/Auth/forgot_screen.dart';
@@ -32,9 +35,9 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     screens = [
-      TestScreen(), // Initialize ProfileScreen after userId is available
-      TestScreen(),
-      TestScreen(),
+      NewsScreen(),
+      CultureScreen(),
+      BusScreen(),
       ProfileScreen(userId: widget.userId),
     ];
 
