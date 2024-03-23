@@ -1,9 +1,11 @@
+import 'package:allamvizsga/screens/Culture/detailswidgets/detail_list.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:allamvizsga/screens/Culture/widgets/listcard_widget.dart';
 import 'package:allamvizsga/screens/Culture/widgets/recommendation_widget.dart';
 import 'package:allamvizsga/screens/Culture/models/culture_models.dart';
+
 
 class CultureScreen extends StatefulWidget {
   const CultureScreen({Key? key}) : super(key: key);
@@ -45,6 +47,15 @@ class _CultureScreenState extends State<CultureScreen> {
     }
   }
 
+  void navigateToDetailListScreen(String id) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailListScreen(idDoc: id),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +91,10 @@ class _CultureScreenState extends State<CultureScreen> {
             const SizedBox(height: 10),
             Column(
               children: cultures?.map<Widget>((cultureData) {
-                return ListCard(cultureData: cultureData, onPressed: () {});
+                return ListCard(
+                  cultureData: cultureData,
+                  onPressed: navigateToDetailListScreen, // Módosítás: Callback függvény átadása
+                );
               }).toList() ?? [],
             ),
           ],

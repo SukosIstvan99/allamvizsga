@@ -1,18 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:allamvizsga/screens/BusTT/bus_screen.dart';
 import 'package:allamvizsga/screens/Culture/culture_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/profile_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ReportScreen/report_screen.dart';
 import 'package:allamvizsga/screens/News/news_screen.dart';
 import 'package:allamvizsga/screens/test_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:allamvizsga/screens/Auth/forgot_screen.dart';
-import 'package:allamvizsga/screens/Auth/login_screen.dart';
-import 'package:allamvizsga/screens/Auth/registration_screen.dart';
-import 'package:curved_nav_bar/curved_bar/curved_action_bar.dart';
-import 'package:curved_nav_bar/fab_bar/fab_bottom_app_bar_item.dart';
-import 'package:curved_nav_bar/flutter_curved_bottom_nav_bar.dart';
-import 'package:allamvizsga/providers/controller.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,110 +16,85 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  late List<Widget> screens; // Declare screens variable
-
-  int _currentIndex = 0;
-
-  Controller controller = Controller();
+class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    screens = [
-      NewsScreen(),
-      CultureScreen(),
-      BusScreen(),
-      ProfileScreen(userId: widget.userId),
-    ];
+    tabController = TabController(length: 5, vsync: this);
+  }
 
-    controller.initSetState(setState);
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavBar(
-        activeColor: Colors.white,
-        navBarBackgroundColor: Colors.black,
-        inActiveColor: Colors.white,
-        appBarItems: [
-          FABBottomAppBarItem(
-            activeIcon: const Icon(
-              Icons.newspaper,
-              color: Colors.red,
-            ),
-            inActiveIcon: const Icon(
-              Icons.newspaper,
-              color: Colors.white,
-            ),
-            text: 'news',
+      body: Stack(
+        children: [
+          TabBarView(
+            controller: tabController,
+            physics: const BouncingScrollPhysics(),
+            children: [
+              NewsScreen(),
+              CultureScreen(),
+              ReportScreen(), // Placeholder for the space between icons 2 and 4
+              BusScreen(),
+              ProfileScreen(userId: widget.userId),
+            ],
           ),
-          FABBottomAppBarItem(
-            activeIcon: const Icon(
-              Icons.account_balance,
-              color: Colors.red,
+          Positioned(
+            bottom: 10,
+            left: MediaQuery.of(context).size.width * 0.1,
+            right: MediaQuery.of(context).size.width * 0.1,
+            child: BottomAppBar(
+              color: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: TabBar(
+                  controller: tabController,
+                  indicatorColor: Colors.transparent,
+                  labelPadding: EdgeInsets.zero,
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.newspaper),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.account_balance),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.add,color: Colors.red), // Add the Icons.add icon
+                    ),
+                    Tab(
+                      icon: Icon(Icons.directions_bus),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.perm_contact_cal_rounded),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            inActiveIcon: const Icon(
-              Icons.account_balance,
-              color: Colors.white,
-            ),
-            text: 'Culture',
-          ),
-          FABBottomAppBarItem(
-            activeIcon: const Icon(
-              Icons.directions_bus,
-              color: Colors.red,
-            ),
-            inActiveIcon: const Icon(
-              Icons.directions_bus,
-              color: Colors.white,
-            ),
-            text: 'Bus',
-          ),
-          FABBottomAppBarItem(
-            activeIcon: const Icon(
-              Icons.perm_contact_cal_rounded,
-              color: Colors.red,
-            ),
-            inActiveIcon: const Icon(
-              Icons.perm_contact_cal_rounded,
-              color: Colors.white,
-            ),
-            text: 'Profile',
           ),
         ],
-        actionButton: CurvedActionBar(
-          activeIcon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: Colors.orangeAccent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.add,
-              size: 50,
-              color: _currentIndex == 1 ? Colors.red : Colors.white,
-            ),
-          ),
-          inActiveIcon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.add,
-              size: 50,
-              color: _currentIndex == 0 ? Colors.white : Colors.red,
-            ),
-          ),
-          text: 'Report',
-        ),
-        bodyItems: screens,
-        actionBarView: ReportScreen(),
       ),
-      body: screens[_currentIndex],
     );
   }
 }

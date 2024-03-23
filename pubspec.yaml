@@ -45,6 +45,10 @@ dependencies:
   animated_theme_switcher: ^2.0.10
   flutter_screenutil: ^5.9.0
   json_serializable: ^6.7.1
+  flutter_spinkit: any
+  shared_preferences: any
+  get: ^4.6.6
+  geolocator: ^11.0.0
   dot_navigation_bar:
 
 
@@ -55,6 +59,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   google_fonts: ^6.2.1
   flutter_udid: ^3.0.0
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
@@ -73,10 +78,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: Graduate
+      fonts:
+        - asset: assets/Fonts/Graduate-Regular.ttf
+        - asset: assets/Fonts/Italianno-Regular.ttf
+          style: italic
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:

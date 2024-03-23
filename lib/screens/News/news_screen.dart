@@ -1,20 +1,34 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Article {
   final String title;
   final String content;
   final String date;
   final String description;
-  final String imageUrl; // Hír képének URL-je
+  final String imageUrl;
 
   Article({
     required this.title,
     required this.content,
     required this.date,
     required this.description,
-    required this.imageUrl, // Konstruktorhoz hozzáadva
+    required this.imageUrl,
   });
+
+  factory Article.fromJson(Map<String, dynamic> json) {
+    return Article(
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      date: json['date'] ?? '',
+      description: json['description'] ?? '',
+      imageUrl: json['image'] ?? '',
+    );
+  }
 }
 
 class NewsScreen extends StatefulWidget {
@@ -30,114 +44,126 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  List<Article> articles = [
-    Article(
-      title: 'Cikk címe 1',
-      content: 'Cikk tartalma 1',
-      date: '2024-03-23',
-      description: 'Rövid leírás 1',
-      imageUrl: 'https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', // Hír képének URL-je
-    ),
-    Article(
-      title: 'Cikk címe 1',
-      content: 'Cikk tartalma 1',
-      date: '2024-03-23',
-      description: 'Rövid leírás 1',
-      imageUrl: 'https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', // Hír képének URL-je
-    ),
-    Article(
-      title: 'Cikk címe 1',
-      content: 'Cikk tartalma 1',
-      date: '2024-03-23',
-      description: 'Rövid leírás 1',
-      imageUrl: 'https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', // Hír képének URL-je
-    ),
-    Article(
-      title: 'Cikk címe 2',
-      content: 'Cikk tartalma 2',
-      date: '2024-03-24',
-      description: 'Rövid leírás 2',
-      imageUrl: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', // Hír képének URL-je
-    ),
-    // További cikkek hozzáadása
-  ];
+  late Future<List<Article>> futureArticles;
+
+  @override
+  void initState() {
+    super.initState();
+    futureArticles = fetchArticles();
+  }
+
+  Future<List<Article>> fetchArticles() async {
+    final response = await http.get(Uri.parse("http://192.168.1.105/user_api/news.php"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((article) => Article.fromJson(article)).toList();
+    } else {
+      throw Exception('Failed to load articles');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildArticleList(),
+      body: FutureBuilder<List<Article>>(
+        future: futureArticles,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _buildArticleList(snapshot.data!);
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("${snapshot.error}"),
+            );
+          }
+
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildArticleList() {
+
+  Widget _buildArticleList(List<Article> articles) {
     return Column(
       children: [
-        SizedBox(height: 70),
+        SizedBox(height: 50),
         Text(
-          'Üdvözlünk a hírek oldalon', // Üdvözlő szöveg hozzáadása
+          'News',
           style: TextStyle(
+            fontFamily: 'Graduate',
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height:40),
         Expanded(
           child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 70),
             itemCount: articles.length,
             itemBuilder: (context, index) {
-              return Card(
+              return Container(
                 margin: EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Hír képe
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        ),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(articles[index].imageUrl), // Hír képének URL-je
-                        ),
-                      ),
-                    ),
-                    Padding(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage(articles[index].imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
+                    child: Container(
                       padding: EdgeInsets.all(10.0),
+                      color: Colors.black.withOpacity(0.5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                articles[index].title,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                DateFormat('yMMMd').format(DateTime.parse(articles[index].date)),
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            articles[index].title ?? '',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(DateTime.parse(articles[index].date)),
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
                           ),
                           SizedBox(height: 10),
-                          Text(articles[index].description),
+                          Text(
+                            articles[index].description ?? '',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 20),
                           ExpansionTile(
-                            title: Text('Teljes tartalom'),
+                            title: Text(
+                              'Teljes tartalom',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                             children: [
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Text(articles[index].content),
+                                child: Text(
+                                  articles[index].content ?? '',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 10),
                             ],
@@ -145,7 +171,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               );
             },

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//allamvizsga main page
+
 
 
 
