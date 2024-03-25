@@ -2,64 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class DetailListScreen extends StatefulWidget {
+class DetailRecommendScreen extends StatefulWidget {
   final String idDoc;
 
-  const DetailListScreen({Key? key, required this.idDoc}) : super(key: key);
+  const DetailRecommendScreen({Key? key, required this.idDoc}) : super(key: key);
 
   @override
-  _DetailListScreenState createState() => _DetailListScreenState();
+  _DetailRecommendScreenState createState() => _DetailRecommendScreenState();
 }
 
-class _DetailListScreenState extends State<DetailListScreen> {
-  late Future<Map<String, dynamic>> fetchDataFuture;
-
+class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
+  late Future<List<Map<String, dynamic>>> fetchRecommendDataFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchDataFuture = fetchData();
+    fetchRecommendDataFuture = fetchRecommendData(widget.idDoc);
     print('idDoc: ${widget.idDoc}');
   }
 
-  Future<Map<String, dynamic>> fetchData() async {
-    final String idDoc = widget.idDoc;
-    final String url = 'http://192.168.1.105/user_api/detail_list.php?id=$idDoc';
-    final response = await http.get(Uri.parse(url));
+  Future<List<Map<String, dynamic>>> fetchRecommendData(String id) async {
+    final response = await http.get(Uri.parse('http://192.168.1.105/user_api/detail_recommendation.php?id=$id'));
     if (response.statusCode == 200) {
-      final List<dynamic> dataList = json.decode(response.body);
-      if (dataList.isNotEmpty) {
-        final Map<String, dynamic> data = dataList.first;
-        return data;
-      } else {
-        throw Exception('No data available for the specified ID');
-      }
+      final List<dynamic> data = json.decode(response.body);
+      final List<Map<String, dynamic>> recommendations = List<Map<String, dynamic>>.from(data);
+      return recommendations;
     } else {
       throw Exception('Failed to load data');
     }
   }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: fetchDataFuture,
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: fetchRecommendDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
-          );
+          return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          final Map<String, dynamic> cultureData = snapshot.data!;
+          final recommendedData = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: Text(cultureData['name'] ?? ''),
+              title: Text(recommendedData[0]['name'] ?? ''),
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -67,7 +52,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                 children: [
                   // Kulturális program részleteinek megjelenítése
                   Image.network(
-                    cultureData['image1'], // kép URL
+                    recommendedData[0]['image1'],
                     width: MediaQuery.of(context).size.width,
                     height: 350,
                     fit: BoxFit.cover,
@@ -78,7 +63,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          cultureData['name'], // név
+                          recommendedData[0]['name'],
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -86,7 +71,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          cultureData['city'], // város
+                          recommendedData[0]['City'],
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
@@ -102,7 +87,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          cultureData['Information'], // információ
+                          recommendedData[0]['Information'],
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
@@ -130,7 +115,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                                   18,
                                 ),
                                 child: Image.network(
-                                  cultureData['image1'],
+                                  recommendedData[0]['image1'],
                                   width: 170,
                                   height: 120,
                                   fit: BoxFit.cover,
@@ -142,7 +127,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                                   18,
                                 ),
                                 child: Image.network(
-                                  cultureData['image2'],
+                                  recommendedData[0]['image2'],
                                   width: 170,
                                   height: 120,
                                   fit: BoxFit.cover,
@@ -154,7 +139,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                                   18,
                                 ),
                                 child: Image.network(
-                                  cultureData['image3'],
+                                  recommendedData[0]['image3'],
                                   width: 170,
                                   height: 120,
                                   fit: BoxFit.cover,
@@ -175,7 +160,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              cultureData['location'], // helyszín
+                              recommendedData[0]['location'],
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -195,7 +180,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              cultureData['Phone'], // kapcsolat
+                              recommendedData[0]['Phone'],
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,

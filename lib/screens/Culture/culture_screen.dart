@@ -93,7 +93,7 @@ class _CultureScreenState extends State<CultureScreen> {
               children: cultures?.map<Widget>((cultureData) {
                 return ListCard(
                   cultureData: cultureData,
-                  onPressed: navigateToDetailListScreen, // Módosítás: Callback függvény átadása
+                  onPressed: navigateToDetailListScreen,
                 );
               }).toList() ?? [],
             ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
+import '../detailswidgets/detail_recommendation.dart'; // Importáljuk a DetailRecommendScreen osztályt
+
 class RecommendationWidget extends StatefulWidget {
   const RecommendationWidget({Key? key}) : super(key: key);
 
@@ -10,20 +13,19 @@ class RecommendationWidget extends StatefulWidget {
 }
 
 class _RecommendationWidgetState extends State<RecommendationWidget> {
-  late List<dynamic> recommendations;
+  late Future<List<dynamic>> recommendationsFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    recommendationsFuture = fetchData();
   }
 
-  Future<void> fetchData() async {
+  Future<List<dynamic>> fetchData() async {
     final response = await http.get(Uri.parse('http://192.168.1.105/user_api/recommendation.php'));
     if (response.statusCode == 200) {
-      setState(() {
-        recommendations = json.decode(response.body);
-      });
+      final List<dynamic> recommendations = json.decode(response.body);
+      return recommendations;
     } else {
       throw Exception('Failed to load data');
     }
@@ -31,17 +33,24 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return recommendations == null
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: recommendations.length,
-      itemBuilder: (context, index) {
-        final recommendationData = recommendations[index];
-        if (recommendationData != null) {
-          return RecommendationCard(recommendationData: recommendationData);
+    return FutureBuilder<List<dynamic>>(
+      future: recommendationsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No data available'));
         } else {
-          return SizedBox(); // Vagy más, amit megfelelőnek tartasz
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: snapshot.data!.map<Widget>((recommendationData) {
+                return RecommendationCard(recommendationData: recommendationData);
+              }).toList(),
+            ),
+          );
         }
       },
     );
@@ -63,9 +72,15 @@ class RecommendationCard extends StatelessWidget {
     final String city = recommendationData!['city'] ?? '';
     final String image1 = recommendationData!['image1'] ?? '';
 
-    return InkWell(
+
+    return GestureDetector(
       onTap: () {
-        // Add onTap action here
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailRecommendScreen(idDoc: id),
+          ),
+        );
       },
       child: Container(
         width: 200,
@@ -108,6 +123,7 @@ class RecommendationCard extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
+
                   Text(
                     city,
                     style: const TextStyle(

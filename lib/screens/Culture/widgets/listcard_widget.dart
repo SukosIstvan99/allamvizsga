@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ListCard extends StatelessWidget {
   final Map<String, dynamic> cultureData;
   final Function(String) onPressed;
-  // Módosítás
+
 
   const ListCard({Key? key, required this.cultureData, required this.onPressed})
       : super(key: key);
@@ -11,12 +11,12 @@ class ListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (cultureData == null) {
-      return SizedBox(); // Vagy valamilyen placeholder widget
+      return SizedBox();
     }
     final String id = cultureData!['id'] ?? '';
     return InkWell(
       onTap: () {
-        onPressed(id); // Módosítás: id átadása a callback-nek
+        onPressed(id);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
