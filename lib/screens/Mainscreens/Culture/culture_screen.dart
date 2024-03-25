@@ -1,10 +1,10 @@
-import 'package:allamvizsga/screens/Culture/detailswidgets/detail_list.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/detailswidgets/detail_list.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:allamvizsga/screens/Culture/widgets/listcard_widget.dart';
-import 'package:allamvizsga/screens/Culture/widgets/recommendation_widget.dart';
-import 'package:allamvizsga/screens/Culture/models/culture_models.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/listcard_widget.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/recommendation_widget.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/models/culture_models.dart';
 
 
 class CultureScreen extends StatefulWidget {

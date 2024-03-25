@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:allamvizsga/screens/BusTT/bus_screen.dart';
-import 'package:allamvizsga/screens/Culture/culture_screen.dart';
+import 'package:allamvizsga/screens/Mainscreens/BusTT/bus_screen.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/culture_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ProfileScreen/profile_screen.dart';
 import 'package:allamvizsga/screens/Mainscreens/ReportScreen/report_screen.dart';
-import 'package:allamvizsga/screens/News/news_screen.dart';
-import 'package:allamvizsga/screens/test_screen.dart';
+import 'package:allamvizsga/screens/Mainscreens/News/news_screen.dart';
 import 'package:flutter/widgets.dart';
 
 class MainScreen extends StatefulWidget {

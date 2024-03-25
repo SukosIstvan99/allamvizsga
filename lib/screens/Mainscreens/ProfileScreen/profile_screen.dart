@@ -135,11 +135,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      CircleAvatar(
+                      _profilePictureUrl.isNotEmpty
+                          ? CircleAvatar(
                         radius: 100,
-                        backgroundImage: _profilePictureUrl.isNotEmpty
-                            ? NetworkImage(_profilePictureUrl)
-                            : AssetImage('assets/profile.png') as ImageProvider<Object>,
+                        backgroundImage: NetworkImage(_profilePictureUrl),
+                      )
+                          : CircleAvatar(
+                        radius: 100,
+                        child: CircularProgressIndicator(),
                       ),
                       GestureDetector(
                         onTap: changeProfilePicture,

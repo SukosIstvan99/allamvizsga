@@ -10,12 +10,12 @@ UploadImgResponse _$UploadImgResponseFromJson(Map<String, dynamic> json) =>
     UploadImgResponse(
       json['success'] as bool,
       json['message'] as String,
-      json['image'] as String,
+      json['imageUrl'] as String,
     );
 
 Map<String, dynamic> _$UploadImgResponseToJson(UploadImgResponse instance) =>
     <String, dynamic>{
       'message': instance.message,
       'success': instance.success,
-      'image': instance.image,
+      'imageUrl': instance.image,
     };

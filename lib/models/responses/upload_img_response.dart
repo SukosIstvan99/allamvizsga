@@ -8,7 +8,7 @@ part 'upload_img_response.g.dart';
 class UploadImgResponse extends ApiBaseResponse {
   UploadImgResponse(bool success,String message, this.image) : super(success,message);
 
- // @JsonKey(name: "uid")
+ @JsonKey(name: "imageUrl")
   final String image;
 
 
