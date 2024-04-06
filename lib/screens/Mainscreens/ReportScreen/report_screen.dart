@@ -9,6 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:http/http.dart' as http;
 
+import '../News/news_screen.dart';
+
 class ReportScreen extends StatefulWidget {
   @override
   _ReportScreenState createState() => _ReportScreenState();
@@ -101,10 +103,26 @@ class _ReportScreenState extends State<ReportScreen> {
     var response = await request.send();
     if (response.statusCode == 200) {
       print('Report sent successfully');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Report sent successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        image = null;
+        showMap = false;
+        descriptionController.clear();
+        selectedCategory = null;
+      });
+
     } else {
       print('Failed to send report. Status code: ${response.statusCode}');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -355,7 +373,8 @@ class _ReportScreenState extends State<ReportScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    await sendReport(); // Call the function to send report
+                    await sendReport();
+
                   },
                   child: Text(
                     'Send Report',
