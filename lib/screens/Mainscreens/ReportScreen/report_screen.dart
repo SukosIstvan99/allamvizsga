@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
+import 'package:http/http.dart' as http;
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _ReportScreenState extends State<ReportScreen> {
   LatLng? currentLatLng;
   TextEditingController descriptionController = TextEditingController();
   String? placeName;
+  XFile? image;
 
   Future<void> getLocationName(double latitude, double longitude) async {
     try {
@@ -53,18 +55,18 @@ class _ReportScreenState extends State<ReportScreen> {
     }
 
     locationData = await location.getLocation();
-    currentLatLng = LatLng(locationData.latitude!, locationData.longitude!);
-    await getLocationName(locationData.latitude!, locationData.longitude!);
+    currentLatLng =
+        LatLng(locationData.latitude!, locationData.longitude!);
+    await getLocationName(
+        locationData.latitude!, locationData.longitude!);
     setState(() {});
   }
 
   bool showMap = false;
 
-  //---------------------------------------------------------
-
   final Location location = Location();
   late LocationData locationData;
-  XFile? image;
+
 
   @override
   void initState() {
@@ -75,6 +77,33 @@ class _ReportScreenState extends State<ReportScreen> {
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
     image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {});
+  }
+
+  Future<void> sendReport() async {
+    final url = Uri.parse('http://192.168.1.105/user_api/upload_report_picture.php');
+
+    var request = http.MultipartRequest('POST', url);
+    request.fields['description'] = descriptionController.text;
+    request.fields['category'] = selectedCategory!;
+    request.fields['latitude'] = currentLatLng?.latitude.toString() ?? '';
+    request.fields['longitude'] = currentLatLng?.longitude.toString() ?? '';
+    request.files.add(await http.MultipartFile.fromPath(
+      'image',
+      image!.path,
+    ));
+
+    if (image == null) {
+      print('No image selected');
+      return;
+    }
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Report sent successfully');
+    } else {
+      print('Failed to send report. Status code: ${response.statusCode}');
+    }
   }
 
   @override
@@ -86,7 +115,7 @@ class _ReportScreenState extends State<ReportScreen> {
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Colors.grey, Colors.white10],
+            colors: [Colors.white, Colors.transparent],
           ),
         ),
         child: Padding(
@@ -117,28 +146,29 @@ class _ReportScreenState extends State<ReportScreen> {
                           'Report Page',
                           style: GoogleFonts.italiana(
                             textStyle: const TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(-1.5, -1.5),
-                                    color: Colors.black,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(1.5, -1.5),
-                                    color: Colors.black,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(1.5, 1.5),
-                                    color: Colors.black,
-                                  ),
-                                  Shadow(
-                                    offset: Offset(-1.5, 1.5),
-                                    color: Colors.black,
-                                  ),
-                                ]),
+                              fontSize: 60,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(-1.5, -1.5),
+                                  color: Colors.black,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.5, -1.5),
+                                  color: Colors.black,
+                                ),
+                                Shadow(
+                                  offset: Offset(1.5, 1.5),
+                                  color: Colors.black,
+                                ),
+                                Shadow(
+                                  offset: Offset(-1.5, 1.5),
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -164,7 +194,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.grey,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: image == null
                           ? Column(
@@ -186,13 +216,13 @@ class _ReportScreenState extends State<ReportScreen> {
                             child: Image.file(
                               File(image!.path),
                               fit: BoxFit.cover,
-                              width: 150, // Nagyobb szélesség
-                              height: 150, // Nagyobb magasság
+                              width: 150,
+                              height: 150,
                             ),
                           ),
                           Positioned(
-                            top: 8, // Pozíció módosítása
-                            right: 8, // Pozíció módosítása
+                            top: 8,
+                            right: 8,
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -200,11 +230,11 @@ class _ReportScreenState extends State<ReportScreen> {
                                 });
                               },
                               child: Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.white70,
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.close,
+                                child: const Icon(Icons.close,
                                     size: 20, color: Colors.red),
                               ),
                             ),
@@ -225,7 +255,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       margin: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.grey,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: showMap
                           ? (currentLatLng != null
@@ -235,7 +265,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: GoogleMap(
                           initialCameraPosition: CameraPosition(
                             target: currentLatLng!,
-                            zoom: 15,
+                            zoom: 16,
                           ),
                           markers: {
                             Marker(
@@ -246,7 +276,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       )
                           : Center(child: CircularProgressIndicator()))
-                          : Column(
+                          : const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
@@ -266,15 +296,16 @@ class _ReportScreenState extends State<ReportScreen> {
                     margin: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextField(
                       controller: descriptionController,
                       maxLines: null,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: ('description'),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintText: ('Description'),
+                        hintStyle:
+                        TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       style: TextStyle(color: Colors.white),
                     ),
@@ -284,23 +315,22 @@ class _ReportScreenState extends State<ReportScreen> {
                     margin: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.grey,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
                       child: DropdownButton<String>(
-                        value: selectedCategory, // Add this line
-                        hint: Text('choose',
-                            style:
-                            TextStyle(color: Colors.white, fontSize: 18)),
+                        value: selectedCategory,
+                        hint: const Text('Choose',
+                            style: TextStyle(color: Colors.white, fontSize: 20)),
                         dropdownColor: Colors.grey,
                         style: const TextStyle(color: Colors.white),
-                        items: ['Baleset', 'Veszhelyzet', 'Bejelentes']
+                        items: ['Baleset', 'Veszhelyzet', 'Bejelentes', 'Road problems']
                             .map((String category) {
                           return DropdownMenuItem<String>(
                             value: category,
                             child: Text(
                               category,
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(fontSize: 20),
                             ),
                           );
                         }).toList(),
@@ -315,22 +345,21 @@ class _ReportScreenState extends State<ReportScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
+                    backgroundColor: Colors.green,
                     minimumSize: const Size(250, 60),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: () async {
-                    // Implement report sending logic here
+                    await sendReport(); // Call the function to send report
                   },
-                  child: Text('save_report',
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
+                  child: Text(
+                    'Send Report',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
