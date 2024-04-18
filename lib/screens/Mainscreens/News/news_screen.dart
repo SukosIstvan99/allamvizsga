@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 class Article {
   final String title;
@@ -53,7 +54,7 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Future<List<Article>> fetchArticles() async {
-    final response = await http.get(Uri.parse("http://192.168.1.105/user_api/news.php"));
+    final response = await http.get(Uri.parse("${constant.cim}news.php"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);

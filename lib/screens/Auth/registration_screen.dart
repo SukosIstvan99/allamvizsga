@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:allamvizsga/network/constants.dart' as constant;
 import 'login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -28,7 +28,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         passwordController.text.isNotEmpty &&
         birthdayController.text.isNotEmpty &&
         phoneController.text.isNotEmpty) {
-      String uri = "http://192.168.1.105/user_api/insert_record.php";
+      String uri = "${constant.cim}insert_record.php";
       var res = await http.post(Uri.parse(uri), body: {
         "firstName": firstNameController.text,
         "lastName": lastNameController.text,

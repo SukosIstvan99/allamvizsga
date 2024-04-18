@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:allamvizsga/network/constants.dart' as constant;
 
-
-import '../detailswidgets/detail_recommendation.dart'; // Importáljuk a DetailRecommendScreen osztályt
+import '../detailswidgets/detail_movies.dart';
 
 class RecommendationWidget extends StatefulWidget {
   const RecommendationWidget({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
   }
 
   Future<List<dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse('http://192.168.1.105/user_api/recommendation.php'));
+    final response = await http.get(Uri.parse('${constant.cim}movies.php'));
     if (response.statusCode == 200) {
       final List<dynamic> recommendations = json.decode(response.body);
       return recommendations;
@@ -85,10 +85,18 @@ class RecommendationCard extends StatelessWidget {
       child: Container(
         width: 200,
         margin: const EdgeInsets.only(right: 24),
-        padding: const EdgeInsets.all(10),
+       padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: Colors.white,
+            boxShadow: [
+        BoxShadow(
+        color: Colors.grey.withOpacity(0.1),
+        spreadRadius: 5,
+        blurRadius: 7,
+        offset: Offset(0, 3),
+      ),
+      ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

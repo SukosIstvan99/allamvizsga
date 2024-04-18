@@ -1,10 +1,11 @@
-import 'package:allamvizsga/screens/Mainscreens/Culture/detailswidgets/detail_list.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/detailswidgets/detail_culture.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/listcard_widget.dart';
-import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/recommendation_widget.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/culture_widget.dart';
+import 'package:allamvizsga/screens/Mainscreens/Culture/widgets/movies_widget.dart';
 import 'package:allamvizsga/screens/Mainscreens/Culture/models/culture_models.dart';
+import 'package:allamvizsga/network/constants.dart' as constants;
 
 
 class CultureScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _CultureScreenState extends State<CultureScreen> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('http://192.168.1.105/user_api/recommendation.php'));
+    final response = await http.get(Uri.parse('${constants.cim}movies.php'));
     if (response.statusCode == 200) {
       setState(() {
         recommendations = json.decode(response.body);
@@ -37,7 +38,7 @@ class _CultureScreenState extends State<CultureScreen> {
   }
 
   Future<void> fetchCultureData() async {
-    final response = await http.get(Uri.parse('http://192.168.1.105/user_api/listcard.php'));
+    final response = await http.get(Uri.parse('${constants.cim}culture.php'));
     if (response.statusCode == 200) {
       setState(() {
         cultures = json.decode(response.body);
@@ -65,7 +66,7 @@ class _CultureScreenState extends State<CultureScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Recommend',
+              'Mozi',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -82,7 +83,7 @@ class _CultureScreenState extends State<CultureScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Culture Programs',
+              'Kulturális Programok',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

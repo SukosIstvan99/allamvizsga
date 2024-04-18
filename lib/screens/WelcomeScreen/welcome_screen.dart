@@ -87,7 +87,7 @@ class WelcomeScreen extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
-                        fontFamily: 'Google Italianno', // Google Italianno Regular 400 font
+                        fontFamily: 'Google Italianno',
                       ),
                     ),
                   ),

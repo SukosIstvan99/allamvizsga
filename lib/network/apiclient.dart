@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:allamvizsga/models/responses/upload_img_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 
 
 class ApiClient {
   ApiClient({required this.client});
 
+
   final http.Client client;
-  final String url = 'http://192.168.1.105/user_api/';
+  final String url = constant.cim;
 
   // API nevek
   final String _profilePath = 'profile.php';
@@ -68,7 +70,7 @@ class ApiClient {
 
   Future<UploadImgResponse> uploadCameraPhoto({required String uid, required List<String> files}) async {
     return UploadImgResponse.fromJson(await _postMultipart(
-        path: _uploadReportImgPath,
+        path: _uploadimgPath,
         arguments: <String, String>{
           _uidField: uid,
         },
@@ -81,7 +83,7 @@ class ApiClient {
 
   Future<UploadImgResponse> uploadReportPhoto({required String uid, required List<String> files}) async {
     return UploadImgResponse.fromJson(await _postMultipart(
-        path: _uploadimgPath,
+        path: _uploadReportImgPath,
         arguments: <String, String>{
 
         },

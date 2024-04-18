@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 class SendFeedbackScreen extends StatefulWidget {
   final String userId;
@@ -22,7 +23,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
 
   Future<void> _sendFeedback() async {
     String feedback = _feedbackController.text;
-    String url = 'http://192.168.1.105/user_api/report.php';
+    String url = '${constant.cim}report.php';
 
     try {
       var response = await http.post(

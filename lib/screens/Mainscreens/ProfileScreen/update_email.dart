@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 class UpdateEmailPage extends StatefulWidget {
   final String userId;
@@ -35,7 +36,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
 
       try {
         var response = await http.post(
-          Uri.parse("http://192.168.1.105/user_api/update_email.php"),
+          Uri.parse("${constant.cim}update_email.php"),
           body: {
             'userId': widget.userId,
             'newEmail': newEmail,

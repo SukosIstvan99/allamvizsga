@@ -5,7 +5,7 @@ class CultureModel {
 
   CultureModel({
     required this.name,
-    this.image1 = '', // Alapértelmezett érték beállítása
+    this.image1 = '',
     required this.city,
   });
 }

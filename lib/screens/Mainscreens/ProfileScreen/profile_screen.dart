@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-
+import 'package:allamvizsga/network/constants.dart' as constant;
 class ProfileScreen extends StatefulWidget {
   final String userId;
 
@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
   Future<void> getProfileData() async {
-    String uri = "http://192.168.1.105/user_api/profile.php?user_id=${widget.userId}";
+    String uri = "${constant.cim}profile.php?user_id=${widget.userId}";
     try {
       var response = await http.get(Uri.parse(uri));
       var userData = jsonDecode(response.body);

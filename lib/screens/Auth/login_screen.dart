@@ -6,9 +6,9 @@ import 'package:allamvizsga/screens/Home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
 import 'registration_screen.dart';
 import 'forgot_screen.dart';
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> login() async {
-    String uri = "http://192.168.1.105/user_api/login.php";
+    String uri = "${constant.cim}login.php";
     var res = await http.post(Uri.parse(uri), body: {
       "email": _emailController.text,
       "password": _passwordController.text,

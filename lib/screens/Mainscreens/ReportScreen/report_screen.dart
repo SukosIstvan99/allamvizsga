@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:http/http.dart' as http;
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 import '../News/news_screen.dart';
 
@@ -18,10 +19,12 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   String? selectedCategory;
+  String? selectedCategoryId;
   LatLng? currentLatLng;
   TextEditingController descriptionController = TextEditingController();
   String? placeName;
   XFile? image;
+  List<Map<String, dynamic>> categories = [];
 
   Future<void> getLocationName(double latitude, double longitude) async {
     try {
@@ -69,11 +72,31 @@ class _ReportScreenState extends State<ReportScreen> {
   final Location location = Location();
   late LocationData locationData;
 
-
   @override
   void initState() {
     super.initState();
+    getCategories();
     getLocation();
+  }
+
+  Future<void> getCategories() async {
+    final url = Uri.parse('${constant.cim}get_categories.php');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          categories = List<Map<String, dynamic>>.from(data.map((item) =>
+          {'id': item['id'].toString(), 'category': item['category']}));
+        });
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      print('Error getting categories: $e');
+    }
   }
 
   Future<void> pickImage() async {
@@ -83,13 +106,14 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Future<void> sendReport() async {
-    final url = Uri.parse('http://192.168.1.105/user_api/upload_report_picture.php');
+    final url = Uri.parse('${constant.cim}upload_report_picture.php');
 
     var request = http.MultipartRequest('POST', url);
     request.fields['description'] = descriptionController.text;
-    request.fields['category'] = selectedCategory!;
     request.fields['latitude'] = currentLatLng?.latitude.toString() ?? '';
     request.fields['longitude'] = currentLatLng?.longitude.toString() ?? '';
+    request.fields['category_id'] = selectedCategoryId ?? ''; // Módosítás: az ID-t küldd vissza
+
     request.files.add(await http.MultipartFile.fromPath(
       'image',
       image!.path,
@@ -115,14 +139,12 @@ class _ReportScreenState extends State<ReportScreen> {
         showMap = false;
         descriptionController.clear();
         selectedCategory = null;
+        selectedCategoryId = null; // Azonosító törlése
       });
-
     } else {
       print('Failed to send report. Status code: ${response.statusCode}');
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +241,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Photos',
+                            'Kép',
                             style: TextStyle(
                                 color: Colors.white, fontSize: 20),
                           ),
@@ -298,7 +320,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'map',
+                            'Térkép',
                             style: TextStyle(
                                 color: Colors.white, fontSize: 20),
                           ),
@@ -321,7 +343,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       maxLines: null,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: ('Description'),
+                        hintText: ('Leírás'),
                         hintStyle:
                         TextStyle(color: Colors.white, fontSize: 20),
                       ),
@@ -338,16 +360,15 @@ class _ReportScreenState extends State<ReportScreen> {
                     child: Center(
                       child: DropdownButton<String>(
                         value: selectedCategory,
-                        hint: const Text('Choose',
+                        hint: const Text('Kategória',
                             style: TextStyle(color: Colors.white, fontSize: 20)),
                         dropdownColor: Colors.grey,
                         style: const TextStyle(color: Colors.white),
-                        items: ['Baleset', 'Veszhelyzet', 'Bejelentes', 'Road problems']
-                            .map((String category) {
+                        items: categories.map((category) {
                           return DropdownMenuItem<String>(
-                            value: category,
+                            value: category['category'],
                             child: Text(
-                              category,
+                              category['category'],
                               style: TextStyle(fontSize: 20),
                             ),
                           );
@@ -355,6 +376,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         onChanged: (String? newValue) {
                           setState(() {
                             selectedCategory = newValue;
+                            selectedCategoryId = categories
+                                .firstWhere((element) =>
+                            element['category'] == newValue)['id'];
                           });
                         },
                       ),
@@ -374,7 +398,6 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                   onPressed: () async {
                     await sendReport();
-
                   },
                   child: Text(
                     'Send Report',
