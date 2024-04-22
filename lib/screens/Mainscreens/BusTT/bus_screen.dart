@@ -1,80 +1,177 @@
+import 'dart:convert';
+import 'package:allamvizsga/screens/Mainscreens/BusTT/widget/buscard.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:allamvizsga/network/constants.dart' as constant;
 
 class DropDownItem {
   final String value;
   final String label;
+  String idInduloMegallo;
+  String megallosorrend;
 
   DropDownItem({
     required this.value,
     required this.label,
+    required this.idInduloMegallo,
+    required this.megallosorrend,
   });
 }
 
 class Bus {
   final DropDownItem source;
   final DropDownItem destination;
-  final String distance;
-  final String busType;
-  final String departureTime;
-  final String duration;
+  String vonal;
+  final String erkezesiido;
+  final String megallasiido;
 
   Bus({
     required this.source,
     required this.destination,
-    required this.distance,
-    required this.busType,
-    required this.departureTime,
-    required this.duration,
+    required this.vonal,
+    required this.erkezesiido,
+    required this.megallasiido,
   });
 }
 
-class BusScreen extends StatelessWidget {
+class BusScreen extends StatefulWidget {
   const BusScreen({Key? key}) : super(key: key);
 
   @override
+  _BusScreenState createState() => _BusScreenState();
+}
+
+class _BusScreenState extends State<BusScreen> {
+  List<DropDownItem> cities = [];
+  List<DropDownItem> destinationCities = [];
+  DropDownItem? sourceCity;
+  DropDownItem? destinationCity;
+  bool isSearchPressed = false;
+  final List<Bus> buses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMegallo();
+  }
+
+  Future<void> fetchMegallo() async {
+    final response = await http.get(Uri.parse('${constant.cim}megallok.php'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      setState(() {
+        cities = responseData.map((item) =>
+            DropDownItem(
+                value: item['id_megallo'],
+                label: item['megallo_neve'],
+                idInduloMegallo: item['id_indulo_megallo'],
+                megallosorrend: item['id_megallo'])).toList();
+      });
+    } else {
+      throw Exception('Failed to load cities');
+    }
+  }
+
+  void fetchDestinationCities() {
+    setState(() {
+      destinationCities = cities
+          .where((item) =>
+      item.idInduloMegallo == sourceCity?.idInduloMegallo &&
+          (int.tryParse(item.megallosorrend) ?? 0) >
+              (int.tryParse(sourceCity?.megallosorrend ?? '0') ?? 0))
+          .toList();
+    });
+  }
+
+  Future<String> fetchVonalszam(String sourceCityId, String destinationCityId) async {
+    final response = await http.get(Uri.parse('${constant
+        .cim}vonalszam.php?sourceCity=$sourceCityId&destinationCity=$destinationCityId'));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to fetch vonalszam');
+    }
+  }
+
+  Future<List<String>> fetchUtazasIdo(String sourceCityId, String destinationCityId) async {
+    final response = await http.get(
+      Uri.parse('${constant.cim}utazasido.php?sourceCityId=$sourceCityId&destinationCityId=$destinationCityId'),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      List<String> departureTimes = List<String>.from(responseData['departureTimes']);
+      String erkezesiido = departureTimes.isNotEmpty ? departureTimes[0] : 'Nincs elérhető utazási idő';
+      String megallasiido = departureTimes.length > 1 ? departureTimes[1] : 'Nincs elérhető utazási idő';
+      return [erkezesiido, megallasiido];
+    } else {
+      throw Exception('Failed to fetch departure times');
+    }
+  }
+
+
+
+  void searchBuses() async {
+    setState(() {
+      isSearchPressed = true;
+      buses.clear();
+    });
+
+    try {
+      String vonal = await fetchVonalszam(sourceCity!.idInduloMegallo, destinationCity!.idInduloMegallo);
+
+      if (vonal.isEmpty || vonal == '0') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Nincs buszjárat'),
+          ),
+        );
+      } else {
+        List<String> utazasIdo = await fetchUtazasIdo(sourceCity!.value, destinationCity!.value);
+
+        setState(() {
+          buses.add(
+            Bus(
+              source: sourceCity!,
+              destination: destinationCity!,
+              vonal: vonal,
+              erkezesiido: utazasIdo.isNotEmpty ? utazasIdo[0] : 'Nincs elérhető utazási idő', // Ellenőrzés hozzáadva a válasz ellenőrzésére
+              megallasiido: utazasIdo.isNotEmpty ? utazasIdo[1] : 'Nincs elérhető utazási idő', // Ellenőrzés hozzáadva a válasz ellenőrzésére
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      print('Hiba történt az utazási idők lekérdezése közben: $e');
+    }
+  }
+
+
+
+
+
+  @override
   Widget build(BuildContext context) {
-    final List<DropDownItem> cities = [
-      DropDownItem(value: 'Town A', label: 'Town A'),
-      DropDownItem(value: 'Town B', label: 'Town B'),
-      DropDownItem(value: 'Town C', label: 'Town C'),
-    ];
-
-    final List<Bus> buses = [
-      Bus(
-        source: cities[0],
-        destination: cities[1],
-        distance: '20 KM',
-        busType: 'Mercedes Electric, 40 seater, AC',
-        departureTime: '05:00 AM',
-        duration: '35m',
-      ),
-      Bus(
-        source: cities[1],
-        destination: cities[2],
-        distance: '30 KM',
-        busType: 'Volvo Deluxe, 50 seater, Non-AC',
-        departureTime: '06:30 AM',
-        duration: '1h 15m',
-      ),
-      // További buszok...
-    ];
-
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(
-            height: 100,
+          SizedBox(
+            height: 50,
           ),
-          const Text(
-            'Mennél valahova Legény? ',
+          Text(
+            'Buszjárat',
             style: TextStyle(
-              fontSize: 28,
+              fontFamily: 'Graduate',
+              fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
             textAlign: TextAlign.center,
-          ), // Új szöveg hozzáadva
-          const SizedBox(
+          ),
+          SizedBox(
             height: 40,
           ),
           Row(
@@ -83,18 +180,29 @@ class BusScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('SOURCE',),
+                  Text(
+                    'Honnan?',
+                    style: TextStyle(fontSize: 20),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: DropdownButton(
-                      value: cities[0].value,
+                      hint: Text('Honnan szeretne?'),
+                      value: sourceCity?.value,
                       items: cities.map((item) {
                         return DropdownMenuItem(
                           value: item.value,
                           child: Text(item.label),
                         );
                       }).toList(),
-                      onChanged: (String? value) {},
+                      onChanged: (String? value) {
+                        setState(() {
+                          sourceCity = cities.firstWhere((element) =>
+                          element.value == value);
+                          fetchDestinationCities(); // Új úticél városok lekérése
+                          destinationCity = null;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -102,176 +210,71 @@ class BusScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('DESTINATION'),
+                  Text(
+                    'Hova?',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: DropdownButton(
-                      value: cities[1].value,
-                      items: cities.map((item) {
+                      hint: Text('Hová szeretne?'),
+                      value: destinationCity?.value,
+                      items: destinationCities.map((item) {
                         return DropdownMenuItem(
                           value: item.value,
                           child: Text(item.label),
                         );
                       }).toList(),
-                      onChanged: (String? value) {},
+                      onChanged: (String? value) {
+                        setState(() {
+                          destinationCity = destinationCities.firstWhere((
+                              element) => element.value == value);
+                        });
+                      },
                     ),
                   ),
                 ],
               ),
             ],
           ),
+          SizedBox(height: 20),
           TextButton.icon(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-            label: const Text(
-              'Search',
-              style: TextStyle(color: Colors.white),
+            icon: Icon(Icons.search, color: Colors.white),
+            onPressed: () {
+              searchBuses();
+            },
+            label: Text(
+              'Keresés',
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             style: TextButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.black,
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 12,
           ),
           Expanded(
-            child: ListView.builder(
+            child: isSearchPressed
+                ? buses.isEmpty
+                ? Center(
+              child: CircularProgressIndicator(),
+            )
+                : ListView.builder(
               itemCount: buses.length,
-              itemBuilder: (context, index) => BusCard(bus: buses[index]),
-            ),
+              itemBuilder: (context, index) => BusCard(
+                bus: buses[index],
+                sourceCity: sourceCity,
+                destinationCity: destinationCity,
+              ),
+            )
+                : Container(),
           ),
         ],
       ),
     );
   }
 }
-
-class BusCard extends StatelessWidget {
-  final Bus bus;
-
-  const BusCard({Key? key, required this.bus}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.blue[700],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        width: double.infinity,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    bus.source.label,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward,
-                  color: Colors.white,
-                ),
-                Expanded(
-                  child: Text(
-                    bus.destination.label,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.directions,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Text(
-                    '${bus.distance}, via Town C',
-                    maxLines: 2,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.directions_bus,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Text(
-                    bus.busType,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.access_time_rounded,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  bus.departureTime,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                const Icon(
-                  Icons.timelapse_rounded,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  bus.duration,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-

@@ -15,7 +15,6 @@ class DetailListScreen extends StatefulWidget {
 class _DetailListScreenState extends State<DetailListScreen> {
   late Future<Map<String, dynamic>> fetchDataFuture;
 
-
   @override
   void initState() {
     super.initState();
@@ -39,6 +38,25 @@ class _DetailListScreenState extends State<DetailListScreen> {
       throw Exception('Failed to load data');
     }
   }
+
+  void _showImageDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
@@ -60,13 +78,12 @@ class _DetailListScreenState extends State<DetailListScreen> {
           final Map<String, dynamic> cultureData = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: Text(cultureData['name'] ?? ''),
+              backgroundColor: Colors.transparent,
             ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Kulturális program részleteinek megjelenítése
                   Image.network(
                     cultureData['image1'], // kép URL
                     width: MediaQuery.of(context).size.width,
@@ -79,39 +96,43 @@ class _DetailListScreenState extends State<DetailListScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          cultureData['name'], // név
-                          style: TextStyle(
-                            fontSize: 22,
+                          cultureData['name'],
+                          style: const TextStyle(
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: 5),
                         Text(
-                          cultureData['city'], // város
-                          style: TextStyle(
-                            fontSize: 16,
+                          cultureData['city'],
+                          style: const TextStyle(
+                            fontSize: 20,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
                         SizedBox(height: 15),
-                        Text(
-                          'Information',
+                        const Text(
+                          'Típus',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          cultureData['typeC'], // információ
-                          style: TextStyle(
-                            fontSize: 14,
+                          cultureData['typeC'],
+                          style: const TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.normal,
                           ),
                           textAlign: TextAlign.justify,
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           'Photo',
                           style: TextStyle(
                             fontSize: 16,
@@ -126,50 +147,61 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
-                                ),
-                                child: Image.network(
-                                  cultureData['image1'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
-                                ),
-                                child: Image.network(
-                                  cultureData['image2'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(cultureData['image1']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    cultureData['image1'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 15),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(cultureData['image2']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    cultureData['image2'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                child: Image.network(
-                                  cultureData['image3'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                              ),
+                              SizedBox(width: 15),
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(cultureData['image3']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    cultureData['image3'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Location',
+                        const Text(
+                          'Helyszín',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         Row(
@@ -177,28 +209,30 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           children: [
                             Text(
                               cultureData['locationC'], // helyszín
-                              style: TextStyle(
-                                fontSize: 14,
+                              style: const TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: 10),
-                        Text(
+                        const Text(
                           'Contact',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              cultureData['Phone'], // kapcsolat
-                              style: TextStyle(
-                                fontSize: 14,
+                              cultureData['Phone'],
+                              style: const TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
@@ -210,17 +244,17 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           width: MediaQuery.of(context).size.width,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pop(context); // Visszalépés a korábbi képernyőre
+                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue, // háttérszín
-                              foregroundColor: Colors.white, // előtérszín
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text(
-                              'Back',
+                            child: const Text(
+                              'Vissza',
                               style: TextStyle(
                                 fontSize: 18,
                               ),

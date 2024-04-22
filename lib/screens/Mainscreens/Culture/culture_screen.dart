@@ -61,17 +61,19 @@ class _CultureScreenState extends State<CultureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+        padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Mozi',
-              style: const TextStyle(
+              style:const TextStyle(
+                fontFamily: 'Graduate',
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-            ),
+                ),
             const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -84,9 +86,11 @@ class _CultureScreenState extends State<CultureScreen> {
             const SizedBox(height: 20),
             Text(
               'Kulturális Programok',
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontFamily: 'Graduate',
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 10),

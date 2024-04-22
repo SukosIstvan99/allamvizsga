@@ -390,7 +390,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.black,
                     minimumSize: const Size(250, 60),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

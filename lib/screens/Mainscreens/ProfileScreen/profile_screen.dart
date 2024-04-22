@@ -165,10 +165,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'Hello, $_firstName $_lastName !',
                     style: GoogleFonts.italiana(
                       textStyle: TextStyle(
-                        fontSize: 30,
+                        fontFamily: 'Graduate',
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                      ),
+                    ),
                     ),
                   ),
                 ],

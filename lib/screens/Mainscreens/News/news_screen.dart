@@ -103,7 +103,7 @@ class _NewsScreenState extends State<NewsScreen> {
         ),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.only(bottom: 70),
+            padding: EdgeInsets.only(bottom: 150),
             itemCount: articles.length,
             itemBuilder: (context, index) {
               return Container(
