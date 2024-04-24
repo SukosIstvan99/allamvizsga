@@ -123,7 +123,7 @@ class RecommendationCard extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
@@ -135,7 +135,7 @@ class RecommendationCard extends StatelessWidget {
                   Text(
                     city,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

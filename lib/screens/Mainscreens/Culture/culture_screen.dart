@@ -102,6 +102,7 @@ class _CultureScreenState extends State<CultureScreen> {
                 );
               }).toList() ?? [],
             ),
+            SizedBox(height: 110),
           ],
         ),
       ),

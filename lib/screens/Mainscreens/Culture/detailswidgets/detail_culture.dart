@@ -85,7 +85,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.network(
-                    cultureData['image1'], // kép URL
+                    cultureData['image1'],
                     width: MediaQuery.of(context).size.width,
                     height: 350,
                     fit: BoxFit.cover,
@@ -133,10 +133,12 @@ class _DetailListScreenState extends State<DetailListScreen> {
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          'Photo',
+                          'Képek',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         Container(

@@ -23,6 +23,24 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
     print('idDoc: ${widget.idDoc}');
   }
 
+  void _showImageDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<List<Map<String, dynamic>>> fetchRecommendData(String id) async {
     final response = await http.get(Uri.parse('${constant.cim}detail_movies.php?id=$id'));
     if (response.statusCode == 200) {
@@ -46,7 +64,7 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
           final recommendedData = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: Text(recommendedData[0]['name'] ?? ''),
+              backgroundColor: Colors.transparent,
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -65,43 +83,49 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                       children: [
                         Text(
                           recommendedData[0]['name'],
-                          style: TextStyle(
-                            fontSize: 22,
+                          style: const TextStyle(
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           recommendedData[0]['city'],
-                          style: TextStyle(
-                            fontSize: 16,
+                          style: const TextStyle(
+                            fontSize: 20,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
                         SizedBox(height: 15),
-                        Text(
-                          'Information',
+                        const Text(
+                          'Típus',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           recommendedData[0]['typeM'],
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: const TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.normal,
                           ),
                           textAlign: TextAlign.justify,
                         ),
                         SizedBox(height: 10),
-                        Text(
-                          'Photo',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                       const Text(
+                          'Képek',
+                         style: TextStyle(
+                           fontFamily: 'Graduate',
+                           fontSize: 24,
+                           fontWeight: FontWeight.bold,
+                           color: Colors.black,
+                         ),
                         ),
                         Container(
                           padding: const EdgeInsets.only(
@@ -111,39 +135,48 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
-                                ),
-                                child: Image.network(
-                                  recommendedData[0]['image1'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
-                                ),
-                                child: Image.network(
-                                  recommendedData[0]['image2'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(recommendedData[0]['image1']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    recommendedData[0]['image1'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 15),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  18,
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(recommendedData[0]['image2']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    recommendedData[0]['image2'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                child: Image.network(
-                                  recommendedData[0]['image3'],
-                                  width: 170,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                              ),
+                              SizedBox(width: 15),
+                              InkWell(
+                                onTap: () {
+                                  _showImageDialog(recommendedData[0]['image3']);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.network(
+                                    recommendedData[0]['image3'],
+                                    width: 170,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ],
@@ -151,10 +184,12 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          'Location',
+                          'Helyszín',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         Row(
@@ -163,7 +198,7 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                             Text(
                               recommendedData[0]['locationM'],
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
@@ -173,8 +208,10 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                         Text(
                           'Contact',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontFamily: 'Graduate',
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                         Row(
@@ -183,7 +220,7 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                             Text(
                               recommendedData[0]['Phone'],
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 18,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
@@ -198,14 +235,14 @@ class _DetailRecommendScreenState extends State<DetailRecommendScreen> {
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Colors.black,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             child: Text(
-                              'Back',
+                              'Vissza',
                               style: TextStyle(
                                 fontSize: 18,
                               ),

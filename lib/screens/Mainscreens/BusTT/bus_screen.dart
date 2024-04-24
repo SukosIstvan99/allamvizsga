@@ -78,8 +78,7 @@ class _BusScreenState extends State<BusScreen> {
       destinationCities = cities
           .where((item) =>
       item.idInduloMegallo == sourceCity?.idInduloMegallo &&
-          (int.tryParse(item.megallosorrend) ?? 0) >
-              (int.tryParse(sourceCity?.megallosorrend ?? '0') ?? 0))
+          (int.tryParse(item.megallosorrend) ?? 0) > (int.tryParse(sourceCity?.megallosorrend ?? '0') ?? 0))
           .toList();
     });
   }
@@ -103,8 +102,16 @@ class _BusScreenState extends State<BusScreen> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       List<String> departureTimes = List<String>.from(responseData['departureTimes']);
-      String erkezesiido = departureTimes.isNotEmpty ? departureTimes[0] : 'Nincs elérhető utazási idő';
-      String megallasiido = departureTimes.length > 1 ? departureTimes[1] : 'Nincs elérhető utazási idő';
+      String erkezesiido = 'Nincs';
+      String megallasiido = 'Nincs ';
+
+      if (departureTimes.length > 0) {
+        erkezesiido = departureTimes[0];
+      }
+      if (departureTimes.length > 1) {
+        megallasiido = departureTimes[1];
+      }
+
       return [erkezesiido, megallasiido];
     } else {
       throw Exception('Failed to fetch departure times');

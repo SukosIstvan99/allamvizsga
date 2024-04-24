@@ -58,7 +58,7 @@ class ListCard extends StatelessWidget {
                   Text(
                     cultureData['name'] ?? 'Unknown',
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -68,7 +68,7 @@ class ListCard extends StatelessWidget {
                   Text(
                     cultureData['city'] ?? 'Unknown',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
