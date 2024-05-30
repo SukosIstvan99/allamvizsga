@@ -144,8 +144,8 @@ class _BusScreenState extends State<BusScreen> {
               source: sourceCity!,
               destination: destinationCity!,
               vonal: vonal,
-              erkezesiido: utazasIdo.isNotEmpty ? utazasIdo[0] : 'Nincs elérhető utazási idő', // Ellenőrzés hozzáadva a válasz ellenőrzésére
-              megallasiido: utazasIdo.isNotEmpty ? utazasIdo[1] : 'Nincs elérhető utazási idő', // Ellenőrzés hozzáadva a válasz ellenőrzésére
+              erkezesiido: utazasIdo.isNotEmpty ? utazasIdo[0] : 'Nincs elérhető utazási idő',
+              megallasiido: utazasIdo.isNotEmpty ? utazasIdo[1] : 'Nincs elérhető utazási idő',
             ),
           );
         });
