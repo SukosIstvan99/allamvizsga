@@ -28,25 +28,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         passwordController.text.isNotEmpty &&
         birthdayController.text.isNotEmpty &&
         phoneController.text.isNotEmpty) {
-      String uri = "${constant.cim}insert_record.php";
-      var res = await http.post(Uri.parse(uri), body: {
-        "firstName": firstNameController.text,
-        "lastName": lastNameController.text,
-        "email": emailController.text,
-        "birthday": birthdayController.text,
-        "phone": phoneController.text,
-        "password": passwordController.text,
-      });
+      if (passwordController.text.length >= 8 &&
+          passwordController.text.contains(RegExp(r'[A-Z]'))) {
+        String uri = "${constant.cim}insert_record.php";
+        var res = await http.post(Uri.parse(uri), body: {
+          "firstName": firstNameController.text,
+          "lastName": lastNameController.text,
+          "email": emailController.text,
+          "birthday": birthdayController.text,
+          "phone": phoneController.text,
+          "password": passwordController.text,
+        });
 
-      var response = jsonDecode(res.body);
-      if (response["success"] == true) {
-        _showSuccessSnackbar();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
+        var response = jsonDecode(res.body);
+        if (response["success"] == true) {
+          _showSuccessSnackbar();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        } else {
+          print("some issue");
+        }
       } else {
-        print("some issue");
+        _showPasswordRequirementsSnackbar();
       }
     } else {
       _showIncompleteFieldsSnackbar();
@@ -56,7 +61,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void _showIncompleteFieldsSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Complete all fields'),
+        content: Text('Tölts ki mindent'),
         duration: Duration(seconds: 2),
       ),
     );
@@ -65,8 +70,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void _showSuccessSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Registration was successful'),
+        content: Text('A Regisztráció sikeres volt'),
         duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showPasswordRequirementsSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'A jelszonak legalabb 8 karakterből kell állnia és legalább egy nagy betűt tartalmaznia kell'),
+        duration: Duration(seconds: 4),
       ),
     );
   }
@@ -188,7 +203,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'Password',
+                        hintText: 'Password (at least 8 characters, 1 uppercase)',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
