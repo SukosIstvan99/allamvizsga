@@ -9,12 +9,14 @@ class DropDownItem {
   final String label;
   String idInduloMegallo;
   String megallosorrend;
+  String lehet_indulo;
 
   DropDownItem({
     required this.value,
     required this.label,
     required this.idInduloMegallo,
     required this.megallosorrend,
+    required this.lehet_indulo,
   });
 }
 
@@ -61,12 +63,15 @@ class _BusScreenState extends State<BusScreen> {
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       setState(() {
-        cities = responseData.map((item) =>
-            DropDownItem(
-                value: item['id_megallo'],
-                label: item['megallo_neve'],
-                idInduloMegallo: item['id_indulo_megallo'],
-                megallosorrend: item['id_megallo'])).toList();
+        cities = responseData
+            .where((item) => item['lehet_indulo'] == '1')
+            .map((item) => DropDownItem(
+            value: item['id_megallo'],
+            label: item['megallo_neve'],
+            idInduloMegallo: item['id_indulo_megallo'],
+            lehet_indulo: item['lehet_indulo'],
+            megallosorrend: item['megallo_sorrend']))
+            .toList();
       });
     } else {
       throw Exception('Failed to load cities');
@@ -78,7 +83,9 @@ class _BusScreenState extends State<BusScreen> {
       destinationCities = cities
           .where((item) =>
       item.idInduloMegallo == sourceCity?.idInduloMegallo &&
-          (int.tryParse(item.megallosorrend) ?? 0) > (int.tryParse(sourceCity?.megallosorrend ?? '0') ?? 0))
+          (int.tryParse(item.megallosorrend) ?? 0) >
+              (int.tryParse(sourceCity?.megallosorrend ?? '0') ?? 0) &&
+          item.lehet_indulo == '1')
           .toList();
     });
   }
@@ -100,21 +107,27 @@ class _BusScreenState extends State<BusScreen> {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      List<String> departureTimes = List<String>.from(responseData['departureTimes']);
-      String erkezesiido = 'Nincs';
-      String megallasiido = 'Nincs ';
+      try {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        Map<String, String> departureTimes = Map<String, String>.from(responseData['departureTimes']);
+        String erkezesiido = 'Nincs';
+        String megallasiido = 'Nincs';
 
-      if (departureTimes.length > 0) {
-        erkezesiido = departureTimes[0];
-      }
-      if (departureTimes.length > 1) {
-        megallasiido = departureTimes[1];
-      }
+        if (departureTimes.containsKey(sourceCityId)) {
+          erkezesiido = departureTimes[sourceCityId]!;
+        }
+        if (departureTimes.containsKey(destinationCityId)) {
+          megallasiido = departureTimes[destinationCityId]!;
+        }
 
-      return [erkezesiido, megallasiido];
+        return [erkezesiido, megallasiido];
+      } catch (e) {
+        print('JSON Decode Error: $e');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to parse travel times');
+      }
     } else {
-      throw Exception('Failed to fetch departure times');
+      throw Exception('Failed to fetch travel times');
     }
   }
 
@@ -154,10 +167,6 @@ class _BusScreenState extends State<BusScreen> {
       print('Hiba történt az utazási idők lekérdezése közben: $e');
     }
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +215,7 @@ class _BusScreenState extends State<BusScreen> {
                         setState(() {
                           sourceCity = cities.firstWhere((element) =>
                           element.value == value);
-                          fetchDestinationCities(); // Új úticél városok lekérése
+                          fetchDestinationCities();
                           destinationCity = null;
                         });
                       },

@@ -106,43 +106,70 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Future<void> sendReport() async {
-    final url = Uri.parse('${constant.cim}upload_report_picture.php');
+    final url = Uri.parse('${constant.cim}bejelentes.php');
 
     var request = http.MultipartRequest('POST', url);
     request.fields['description'] = descriptionController.text;
     request.fields['latitude'] = currentLatLng?.latitude.toString() ?? '';
     request.fields['longitude'] = currentLatLng?.longitude.toString() ?? '';
-    request.fields['category_id'] = selectedCategoryId ?? ''; // Módosítás: az ID-t küldd vissza
+    request.fields['category_id'] = selectedCategoryId ?? '';
+
+    if (image == null) {
+      print('No image selected');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Please select an image'),
+          );
+        },
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pop();
+      });
+      return;
+    }
 
     request.files.add(await http.MultipartFile.fromPath(
       'image',
       image!.path,
     ));
 
-    if (image == null) {
-      print('No image selected');
-      return;
-    }
-
     var response = await request.send();
     if (response.statusCode == 200) {
       print('Report sent successfully');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Report sent successfully'),
-          duration: Duration(seconds: 2),
-        ),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Report sent successfully'),
+          );
+        },
       );
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pop();
+      });
       await Future.delayed(Duration(seconds: 2));
       setState(() {
         image = null;
         showMap = false;
         descriptionController.clear();
         selectedCategory = null;
-        selectedCategoryId = null; // Azonosító törlése
+        selectedCategoryId = null;
       });
     } else {
       print('Failed to send report. Status code: ${response.statusCode}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Failed to send report'),
+          );
+        },
+      );
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pop();
+      });
     }
   }
 

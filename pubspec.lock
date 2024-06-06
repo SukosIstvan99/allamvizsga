@@ -346,10 +346,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_screenutil
-      sha256: b372c35a772a1dc84142a3b9c5ee89a390834bd258e5e6a450d9b975b985d1c9
+      sha256: "18d7c1b1eb3c8725104d0434b15aa5437a60811761feaa17a7883bdf56cb6548"
       url: "https://pub.dev"
     source: hosted
-    version: "5.9.1"
+    version: "5.9.2"
   flutter_spinkit:
     dependency: "direct main"
     description:
