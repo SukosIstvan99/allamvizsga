@@ -55,72 +55,69 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Send Feedback'),
+        title: Text(''),
       ),
-      body: Builder(
-        builder: (context) => Column(
-          children: [
-            SizedBox(height: 20.0),
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Text(
-                'Számunkra fontos az ön visszajelzése',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Feedback:',
+      body: Column(
+        children: [
+          SizedBox(height: 20.0),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Számunkra fontos az ön visszajelzése',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20.0),
+                    Text(
+                      'Feedback:',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
+                    TextField(
+                      controller: _feedbackController,
+                      maxLines: null,
+                      minLines: 5,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: 'Ird ide a visszajelzésed...',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(vertical: 20.0),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: _sendFeedback,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        backgroundColor: Colors.black,
+                        fixedSize: Size(200, 50),
+                      ),
+                      child: Text(
+                        'Küldés',
                         style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 10.0),
-                      TextField(
-                        controller: _feedbackController,
-                        maxLines: null,
-                        minLines: 5,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: 'Ird ide a visszajelzésed...',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 20.0),
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      ElevatedButton(
-                        onPressed: _sendFeedback,
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0),
-                          backgroundColor: Colors.orangeAccent,
-                          fixedSize: Size(200, 50),
-                        ),
-                        child: Text(
-                          'Send',
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

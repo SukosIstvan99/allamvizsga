@@ -61,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
               Icons.newspaper,
               color: Colors.white,
             ),
-            text: 'news',
+            text: 'Hírek',
           ),
           FABBottomAppBarItem(
             activeIcon: const Icon(
@@ -72,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
               Icons.account_balance,
               color: Colors.white,
             ),
-            text: 'Culture',
+            text: 'Kultúra',
           ),
           FABBottomAppBarItem(
             activeIcon: const Icon(
@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
               Icons.directions_bus,
               color: Colors.white,
             ),
-            text: 'Bus',
+            text: 'Busz',
           ),
           FABBottomAppBarItem(
             activeIcon: const Icon(
@@ -94,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
               Icons.perm_contact_cal_rounded,
               color: Colors.white,
             ),
-            text: 'Profile',
+            text: 'Profil',
           ),
         ],
         actionButton: CurvedActionBar(

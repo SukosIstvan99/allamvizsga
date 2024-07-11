@@ -7,6 +7,7 @@ import 'package:allamvizsga/screens/Auth/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:allamvizsga/network/constants.dart' as constant;
@@ -126,7 +127,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             left: 0,
             right: 0,
             child: Container(
-              color: Colors.green,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.black, Colors.white],
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                ),
+              ),
               height: MediaQuery.of(context).size.height * 0.4,
               padding: EdgeInsets.only(top: 40),
               child: Column(
@@ -154,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: Icon(
                             Icons.camera_alt_outlined,
-                            color: Colors.green,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -189,12 +196,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ElevatedButton.icon(
                     onPressed: _openProfileEditScreen,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       fixedSize: Size(300, 50),
                     ),
                     icon: Icon(Icons.email, color: Colors.white),
                     label: Text(
-                      'Change Email',
+                      'E-Mail csere',
                       style: GoogleFonts.italiana(
                         textStyle: TextStyle(
                           fontSize: 24,
@@ -219,12 +226,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       fixedSize: Size(300, 50),
                     ),
                     icon: Icon(Icons.feedback, color: Colors.white),
                     label: Text(
-                      'Send Feedback',
+                      'Visszajelzés',
                       style: GoogleFonts.italiana(
                         textStyle: TextStyle(
                           fontSize: 24,
@@ -247,12 +254,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       fixedSize: Size(300, 50),
                     ),
                     icon: Icon(Icons.info, color: Colors.white),
                     label: Text(
-                      'About',
+                      'Rólunk',
                       style: GoogleFonts.italiana(
                         textStyle: TextStyle(
                           fontSize: 24,
@@ -266,12 +273,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ElevatedButton.icon(
                     onPressed: logout,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       fixedSize: Size(300, 50),
                     ),
                     icon: Icon(Icons.logout, color: Colors.white),
                     label: Text(
-                      'Logout',
+                      'Kijelentkezés',
                       style: GoogleFonts.italiana(
                         textStyle: TextStyle(
                           fontSize: 24,

@@ -74,7 +74,7 @@ class _BusScreenState extends State<BusScreen> {
             .toList();
       });
     } else {
-      throw Exception('Failed to load cities');
+      throw Exception('A városok betöltése sikertelen');
     }
   }
 

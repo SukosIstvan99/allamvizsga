@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Positioned(
             top: 100,
             child: Text(
-              "Login",
+              "Bejelentkezés",
               style: GoogleFonts.italiana(
                 textStyle: TextStyle(
                     fontSize: 34,
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      hintText: 'Password',
+                      hintText: 'Jelszó',
                       labelStyle: TextStyle(
                         color: Colors.orangeAccent,
                         shadows: [
@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     child: Text(
-                      'Forgot Password?',
+                      '',
                       style: TextStyle(
                         color: Colors.orangeAccent,
                         fontSize: 16,
@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         minimumSize: Size(200, 50)),
                     child: Text(
-                      'Login',
+                      'Bejelentkezés',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -194,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   Center(
                     child: Text(
-                      'OR',
+                      'VAGY',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -206,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account?',
+                        'Nincs még fiókod?',
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -234,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: const Text(
-                          'Sign Up',
+                          'Regisztrálj',
                           style: TextStyle(
                             color: Colors.orange,
                             fontSize: 16,

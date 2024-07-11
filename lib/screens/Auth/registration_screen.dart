@@ -108,7 +108,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Create account',
+                      'Készíts fiókot',
                       style: GoogleFonts.italiana(
                         textStyle: TextStyle(
                           fontSize: 34,
@@ -131,7 +131,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'First Name',
+                        hintText: 'Vezeték név',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -144,7 +144,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'Last Name',
+                        hintText: 'Kereszt név',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -159,7 +159,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'Birthday',
+                        hintText: 'Születési dátum',
                         suffixIcon: IconButton(
                           onPressed: () {},
                           icon: Icon(Icons.calendar_today),
@@ -176,7 +176,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'Phone',
+                        hintText: 'Telefonszám',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -203,7 +203,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
                         filled: true,
-                        hintText: 'Password (at least 8 characters, 1 uppercase)',
+                        hintText: 'Jelszó',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -222,7 +222,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         minimumSize: Size(200, 50),
                       ),
                       child: Text(
-                        'Register',
+                        'Regisztráció',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -233,7 +233,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 20),
                     Center(
                       child: Text(
-                        'OR',
+                        'VAGY',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -245,7 +245,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Already have an account?',
+                          'Van már fiókod?',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -263,7 +263,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             );
                           },
                           child: Text(
-                            'Log In',
+                            'Jelentkezz be',
                             style: TextStyle(
                               color: Colors.orange,
                               fontSize: 16,

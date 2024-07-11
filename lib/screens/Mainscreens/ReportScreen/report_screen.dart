@@ -210,7 +210,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       top: MediaQuery.of(context).size.height * 0.10,
                       child: Center(
                         child: Text(
-                          'Report Page',
+                          'Bejelentés',
                           style: GoogleFonts.italiana(
                             textStyle: const TextStyle(
                               fontSize: 60,
@@ -427,7 +427,7 @@ class _ReportScreenState extends State<ReportScreen> {
                     await sendReport();
                   },
                   child: Text(
-                    'Send Report',
+                    'Bejelentés',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

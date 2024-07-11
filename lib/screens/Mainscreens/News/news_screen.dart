@@ -92,7 +92,7 @@ class _NewsScreenState extends State<NewsScreen> {
       children: [
         SizedBox(height: 50),
         Text(
-          'News',
+          'Hírek',
           style: TextStyle(
             fontFamily: 'Graduate',
             fontSize: 24,

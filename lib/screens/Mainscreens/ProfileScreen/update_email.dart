@@ -29,7 +29,6 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
     super.dispose();
   }
 
-
   Future<void> _updateEmail() async {
     if (_formKey.currentState!.validate()) {
       String newEmail = _newEmailController.text.trim();
@@ -58,42 +57,56 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Update Email"),
+        title: Text(""),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _newEmailController,
-                decoration: InputDecoration(
-                  labelText: 'New Email',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  textAlign: TextAlign.center,
+                  "Adja meg az új E-mail címet majd a kitöltés után nyomja meg a Frissítés gombot!",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an email address';
-                  }
-                  final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
-                  if (!emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _updateEmail,
-                child: Text("Update Email"),
-              ),
-            ],
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _newEmailController,
+                  decoration: InputDecoration(
+                    labelText: 'Új E-mail',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Kérlek adj meg egy E-mail címet';
+                    }
+                    final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Kérlek adj meg egy valós E-mail címet';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                  ),
+                  onPressed: _updateEmail,
+                  child: Text("Email Frissítése",
+                    style:TextStyle(color: Colors.white,
+                    fontSize: 18) ,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

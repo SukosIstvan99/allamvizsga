@@ -1,41 +1,53 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
-  final List<String> randomFacts = [
-    "A földön található kőzetek több mint 75%-a szilícium és oxigén keveréke.",
-    "A méheket repülés közben aerodinamikai törvények is irányítják.",
-    "Az átlagos felhő kb. 1 millió tonna súlyú.",
-    "Az elefántok a legnagyobb szárazföldi állatok.",
-    "A leghosszabb emberi életet Jeanne Calment érte el, aki 122 évet és 164 napot élt."
-  ];
+  final String termsAndConditions = '''
+  Az alkalmazás felhasználói csak valós problémákat küldhetnek be!
+  Az alkalmazás felhasználóinak az adatait titkosítva vannak! 
+  Nagyon remélem, hogy tetszik a programom! 
+  További szép napot és köszönöm a figyelmet! 
+  ''';
 
-  String getRandomFact() {
-    Random random = Random();
-    return randomFacts[random.nextInt(randomFacts.length)];
-  }
+  final String contactEmail = 'info@cityapp.com';
+  final String contactnumber = '0757788888';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About'),
+        title: Text(''),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (int i = 0; i < 5; i++)
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  getRandomFact(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18.0),
-                ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Felhasználói feltételek',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
-            SizedBox(height: 20.0),
-          ],
+              SizedBox(height: 10.0),
+              Text(
+                termsAndConditions,
+                style: TextStyle(fontSize: 18.0),
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                'Elérhetőség',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10.0),
+              Text(
+                'Email: $contactEmail',
+                style: TextStyle(fontSize: 18.0),
+              ),
+              Text(
+                'Telefonszám: $contactnumber',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
         ),
       ),
     );
