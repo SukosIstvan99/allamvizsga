@@ -1,6 +1,5 @@
-import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,7 +9,6 @@ import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:http/http.dart' as http;
 import 'package:allamvizsga/network/constants.dart' as constant;
 
-import '../News/news_screen.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -60,10 +58,8 @@ class _ReportScreenState extends State<ReportScreen> {
     }
 
     locationData = await location.getLocation();
-    currentLatLng =
-        LatLng(locationData.latitude!, locationData.longitude!);
-    await getLocationName(
-        locationData.latitude!, locationData.longitude!);
+    currentLatLng = LatLng(locationData.latitude!, locationData.longitude!);
+    await getLocationName(locationData.latitude!, locationData.longitude!);
     setState(() {});
   }
 
@@ -101,7 +97,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
-    image = await _picker.pickImage(source: ImageSource.gallery);
+    image = await _picker.pickImage(source: ImageSource.camera);
     setState(() {});
   }
 
@@ -115,12 +111,12 @@ class _ReportScreenState extends State<ReportScreen> {
     request.fields['category_id'] = selectedCategoryId ?? '';
 
     if (image == null) {
-      print('No image selected');
+      print('Nincs kép kiválasztva');
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('Please select an image'),
+            content: Text('Kérlek készíts egy képet'),
           );
         },
       );
@@ -142,7 +138,14 @@ class _ReportScreenState extends State<ReportScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('Report sent successfully'),
+            backgroundColor: Colors.transparent,
+            content: Text(
+              'Bejelentés sikeresen elküldve',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
           );
         },
       );
@@ -270,10 +273,12 @@ class _ReportScreenState extends State<ReportScreen> {
                           Text(
                             'Kép',
                             style: TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.white,
+                                fontSize: 20),
                           ),
                           Icon(Icons.camera_alt_outlined,
-                              color: Colors.white, size: 50),
+                              color: Colors.white,
+                              size: 50),
                         ],
                       )
                           : Stack(
@@ -302,7 +307,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(Icons.close,
-                                    size: 20, color: Colors.red),
+                                    size: 20,
+                                    color: Colors.red),
                               ),
                             ),
                           ),
@@ -349,11 +355,13 @@ class _ReportScreenState extends State<ReportScreen> {
                           Text(
                             'Térkép',
                             style: TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.white,
+                                fontSize: 20),
                           ),
                           SizedBox(height: 2),
                           Icon(Icons.map,
-                              color: Colors.white, size: 50),
+                              color: Colors.white,
+                              size: 50),
                         ],
                       ),
                     ),
@@ -372,9 +380,12 @@ class _ReportScreenState extends State<ReportScreen> {
                         border: InputBorder.none,
                         hintText: ('Leírás'),
                         hintStyle:
-                        TextStyle(color: Colors.white, fontSize: 20),
+                        TextStyle(
+                            color: Colors.white,
+                            fontSize: 20),
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.white),
                     ),
                   ),
                   Container(
@@ -388,7 +399,10 @@ class _ReportScreenState extends State<ReportScreen> {
                       child: DropdownButton<String>(
                         value: selectedCategory,
                         hint: const Text('Kategória',
-                            style: TextStyle(color: Colors.white, fontSize: 20)),
+                            style:
+                            TextStyle(
+                                color: Colors.white,
+                                fontSize: 20)),
                         dropdownColor: Colors.grey,
                         style: const TextStyle(color: Colors.white),
                         items: categories.map((category) {

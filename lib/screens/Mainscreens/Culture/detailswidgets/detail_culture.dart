@@ -210,7 +210,7 @@ class _DetailListScreenState extends State<DetailListScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              cultureData['locationC'], // helyszín
+                              cultureData['locationC'],
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,

@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     if (result == true) {
-      // Email updated successfully, refresh profile data
+
       getProfileData();
     }
   }
